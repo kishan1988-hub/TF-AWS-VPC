@@ -1,9 +1,6 @@
 resource "aws_vpc" "myvpc" {
   cidr_block       = var.vpc_cidr_block
   instance_tenancy = "default"
-  tags = {
-    Name = "myvpc"
-  }
 }
 
 locals {
@@ -16,9 +13,6 @@ resource "aws_subnet" "pub-subnet" {
   vpc_id            = aws_vpc.myvpc.id
   cidr_block        = local.pub_cidr[count.index]
   availability_zone = "ap-south-1a"
-  tags = {
-    Name = "Public Subnet ${count.index}"
-  }
 }
 
 resource "aws_subnet" "pvt-sub" {
@@ -26,16 +20,10 @@ resource "aws_subnet" "pvt-sub" {
   vpc_id            = aws_vpc.myvpc.id
   cidr_block        = local.pvt_cidr[count.index] # private subnet ip range
   availability_zone = "ap-south-1b"
-  tags = {
-    Name = "Private Subnet ${count.index}"
-  }
 }
 
 resource "aws_internet_gateway" "myigw" {
   vpc_id = aws_vpc.myvpc.id
-  tags = {
-    Name = "myigw"
-  }
 }
 
 resource "aws_eip" "nat_eip" {
@@ -47,9 +35,6 @@ resource "aws_nat_gateway" "nat_gate" {
   count         = 2
   allocation_id = aws_eip.nat_eip[count.index].id
   subnet_id     = aws_subnet.pub-subnet[count.index].id
-  tags = {
-    name = "Nat Gateway "
-  }
 }
 
 resource "aws_route_table" "public" {
@@ -57,9 +42,6 @@ resource "aws_route_table" "public" {
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.myigw.id
-  }
-  tags = {
-    name = "Public RT"
   }
 }
 
@@ -69,9 +51,6 @@ resource "aws_route_table" "private" {
   route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat_gate[count.index].id
-  }
-  tags = {
-    name = "Private RT"
   }
 }
 
