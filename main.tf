@@ -3,7 +3,7 @@ resource "aws_vpc" "myvpc" {
   instance_tenancy = "default"
 
   tags = {
-    Name = "My Private VPC"
+    Name       = "My Private VPC"
     created_by = "Terraform"
   }
 }
@@ -21,7 +21,7 @@ resource "aws_subnet" "pub-subnet" {
   availability_zone = "ap-south-1a"
 
   tags = {
-    Name = "Pub-subnet ${count.index}"
+    Name       = "Pub-subnet ${count.index}"
     created_by = "Terraform"
   }
 }
@@ -34,7 +34,7 @@ resource "aws_subnet" "pvt-sub" {
   availability_zone = "ap-south-1b"
 
   tags = {
-    Name = "Pvt-subnet ${count.index}"
+    Name       = "Pvt-subnet ${count.index}"
     created_by = "Terraform"
   }
 }
