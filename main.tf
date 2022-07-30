@@ -1,6 +1,11 @@
 resource "aws_vpc" "myvpc" {
   cidr_block       = var.vpc_cidr_block
   instance_tenancy = "default"
+
+  tags = {
+    Name = "My Private VPC"
+    created_by = "Terraform"
+  }
 }
 
 locals {
@@ -14,6 +19,11 @@ resource "aws_subnet" "pub-subnet" {
   vpc_id            = aws_vpc.myvpc.id
   cidr_block        = local.pub_cidr[count.index]
   availability_zone = "ap-south-1a"
+
+  tags = {
+    Name = "Pub-subnet ${count.index}"
+    created_by = "Terraform"
+  }
 }
 
 resource "aws_subnet" "pvt-sub" {
@@ -22,6 +32,11 @@ resource "aws_subnet" "pvt-sub" {
   vpc_id            = aws_vpc.myvpc.id
   cidr_block        = local.pvt_cidr[count.index] # private subnet ip range
   availability_zone = "ap-south-1b"
+
+  tags = {
+    Name = "Pvt-subnet ${count.index}"
+    created_by = "Terraform"
+  }
 }
 
 resource "aws_internet_gateway" "myigw" {
