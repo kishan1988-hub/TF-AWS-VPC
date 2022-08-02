@@ -1,106 +1,106 @@
-resource "aws_vpc" "myvpc" {
+resource "aws_vpc" "main" {
   cidr_block       = var.vpc_cidr_block
   instance_tenancy = "default"
 
   tags = {
-    Name       = "My Private VPC - ${var.env_code}"
+    Name       = "my-private-vpc-${var.env_code}"
     created_by = "Terraform"
   }
 }
 
-resource "aws_subnet" "pub-subnet" {
+resource "aws_subnet" "public" {
   count = length(var.pub_cidr)
 
-  vpc_id            = aws_vpc.myvpc.id
+  vpc_id            = aws_vpc.main.id
   cidr_block        = var.pub_cidr[count.index]
   availability_zone = "ap-south-1a"
 
   tags = {
-    Name       = "${var.env_code}-Pub-subnet-${count.index}"
+    Name       = "${var.env_code}-public-subnet-${count.index}"
     created_by = "Terraform"
   }
 }
 
-resource "aws_subnet" "pvt-sub" {
+resource "aws_subnet" "private" {
   count = length(var.pvt_cidr)
 
-  vpc_id            = aws_vpc.myvpc.id
+  vpc_id            = aws_vpc.main.id
   cidr_block        = var.pvt_cidr[count.index] # private subnet ip range
   availability_zone = "ap-south-1b"
 
   tags = {
-    Name       = "${var.env_code}-Pvt-subnet ${count.index}"
+    Name       = "${var.env_code}-private-subnet-${count.index}"
     created_by = "Terraform"
   }
 }
 
-resource "aws_internet_gateway" "myigw" {
-  vpc_id = aws_vpc.myvpc.id
+resource "aws_internet_gateway" "this" {
+  vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "My Internet Gateway - ${var.env_code}"
+    Name = "my-internet-gateway-${var.env_code}"
   }
 }
 
-resource "aws_eip" "nat_eip" {
+resource "aws_eip" "main" {
   count = length(var.pub_cidr)
 
   vpc = true
 
   tags = {
-    Name = "${var.env_code} My Elastic IP - ${count.index}"
+    Name = "${var.env_code}-my-elastic-ip-${count.index}"
   }
 }
 
-resource "aws_nat_gateway" "nat_gate" {
+resource "aws_nat_gateway" "this" {
   count = length(var.pub_cidr)
 
-  allocation_id = aws_eip.nat_eip[count.index].id
-  subnet_id     = aws_subnet.pub-subnet[count.index].id
+  allocation_id = aws_eip.main[count.index].id
+  subnet_id     = aws_subnet.public[count.index].id
 
   tags = {
-    Name = "${var.env_code} My NAT Gateway -${count.index} "
+    Name = "${var.env_code}-my-nat-gateway-${count.index} "
   }
 }
 
 resource "aws_route_table" "public" {
   count = length(var.pub_cidr)
 
-  vpc_id = aws_vpc.myvpc.id
+  vpc_id = aws_vpc.main.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.myigw.id
+    gateway_id = aws_internet_gateway.this.id
   }
 
   tags = {
-    Name = " ${var.env_code} Public Route Table"
+    Name = " ${var.env_code}-public-route-table"
   }
 }
 
 resource "aws_route_table" "private" {
   count = length(var.pvt_cidr)
 
-  vpc_id = aws_vpc.myvpc.id
+  vpc_id = aws_vpc.main.id
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gate[count.index].id
+    nat_gateway_id = aws_nat_gateway.this[count.index].id
   }
 
   tags = {
-    Name = "${var.env_code} - Private Route Table ${count.index}"
+    Name = "${var.env_code}-private-route-table-${count.index}"
   }
 }
 
 resource "aws_route_table_association" "public" {
   count = length(var.pub_cidr)
 
-  subnet_id      = aws_subnet.pub-subnet[count.index].id
+  subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public[count.index].id
 }
 
 resource "aws_route_table_association" "private" {
   count = length(var.pvt_cidr)
 
-  subnet_id      = aws_subnet.pvt-sub[count.index].id
+  subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private[count.index].id
 }
