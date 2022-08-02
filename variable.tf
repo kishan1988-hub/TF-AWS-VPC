@@ -6,10 +6,10 @@ variable "env_code" {
   type = string
 }
 
-variable "pub_cidr" {
+variable "public_cidr" {
 
 }
 
-variable "pvt_cidr" {
+variable "private_cidr" {
 
 }
