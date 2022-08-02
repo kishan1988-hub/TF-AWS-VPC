@@ -4,7 +4,6 @@ resource "aws_vpc" "main" {
 
   tags = {
     Name       = "my-private-vpc-${var.env_code}"
-    created_by = "Terraform"
   }
 }
 
@@ -17,7 +16,6 @@ resource "aws_subnet" "public" {
 
   tags = {
     Name       = "${var.env_code}-public-subnet-${count.index}"
-    created_by = "Terraform"
   }
 }
 
@@ -30,7 +28,6 @@ resource "aws_subnet" "private" {
 
   tags = {
     Name       = "${var.env_code}-private-subnet-${count.index}"
-    created_by = "Terraform"
   }
 }
 
