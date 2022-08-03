@@ -3,7 +3,7 @@ resource "aws_vpc" "main" {
   instance_tenancy = "default"
 
   tags = {
-    Name = "private-${var.env_code}"
+    Name = var.env_code
   }
 }
 
