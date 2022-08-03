@@ -35,7 +35,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "${var.env_code}-internet-gateway"
+    Name = "${var.env_code}"
   }
 }
 
@@ -45,7 +45,7 @@ resource "aws_eip" "main" {
   vpc = true
 
   tags = {
-    Name = "${var.env_code}-my-elastic-ip-${count.index}"
+    Name = "${var.env_code}-${count.index}"
   }
 }
 
@@ -56,7 +56,7 @@ resource "aws_nat_gateway" "main" {
   subnet_id     = aws_subnet.public[count.index].id
 
   tags = {
-    Name = "${var.env_code}-my-nat-gateway-${count.index} "
+    Name = "${var.env_code}-${count.index} "
   }
 }
 
