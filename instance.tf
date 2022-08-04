@@ -2,7 +2,7 @@ resource "aws_instance" "public" {
   ami                         = "ami-0912f71e06545ad88"
   associate_public_ip_address = true
   instance_type               = "t2.micro"
-  key_name                    = "dropmailtokishan"
+  key_name                    = "main"
   vpc_security_group_ids      = [aws_security_group.public.id]
   subnet_id                   = aws_subnet.public[0].id
 
