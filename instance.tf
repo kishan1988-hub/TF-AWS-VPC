@@ -1,20 +1,20 @@
-data "aws_ami" "example"{
-  owners = ["137112412989"]
-  most_recent      = true
+data "aws_ami" "amazonlinux" {
+  owners      = ["137112412989"]
+  most_recent = true
 
   filter {
-  name   = "virtualization-type"
-  values = ["hvm"]
-}
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
 
-filter {
-  name   = "name"
-  values = ["amzn-ami-hvm-2018.03.0.20180811-x86*"]
-}
+  filter {
+    name   = "name"
+    values = ["amzn-ami-hvm-2018.03.0.20180811-x86*"]
+  }
 }
 
 resource "aws_instance" "public" {
-  ami                         =  data.aws_ami.example.id
+  ami                         = data.aws_ami.amazonlinux.id
   associate_public_ip_address = true
   instance_type               = "t2.micro"
   key_name                    = "main"
