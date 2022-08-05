@@ -20,6 +20,12 @@ resource "aws_instance" "public" {
   key_name                    = "main"
   vpc_security_group_ids      = [aws_security_group.public.id]
   subnet_id                   = aws_subnet.public[0].id
+  user_data = <<EOF
+  #!/bin/bash
+  sudo yum update -y
+  sudo yum install httpd -y
+  sudo service httpd start
+  EOF
 
   tags = {
     Name = "${var.env_code}-public"
@@ -36,7 +42,15 @@ resource "aws_security_group" "public" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["106.195.42.36/32"]
+    cidr_blocks = ["106.195.44.58/32"]
+  }
+
+  ingress {
+    description = "HTTP from Public"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["106.195.44.58/32"]
   }
 
   egress {
