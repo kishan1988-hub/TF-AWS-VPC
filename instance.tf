@@ -1,5 +1,5 @@
-data "aws_ami" "ubuntu" {
-  owners      = ["099720109477"]
+data "aws_ami" "amazonlinux" {
+  owners      = ["137112412989"]
   most_recent = true
 
   filter {
@@ -9,12 +9,12 @@ data "aws_ami" "ubuntu" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20220609*"]
+    values = ["amzn-ami-hvm-2018.03.0.20180811-x86*"]
   }
 }
 
 resource "aws_instance" "public" {
-  ami                         = data.aws_ami.ubuntu.id
+  ami                         = data.aws_ami.amazonlinux.id
   associate_public_ip_address = true
   instance_type               = "t2.micro"
   key_name                    = "main"
@@ -37,7 +37,7 @@ resource "aws_security_group" "public" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["106.195.44.58/32"]
+    cidr_blocks = ["106.208.56.34/32"]
   }
 
   ingress {
@@ -45,7 +45,7 @@ resource "aws_security_group" "public" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["106.195.44.58/32"]
+    cidr_blocks = ["106.208.56.34/32"]
   }
 
   egress {
@@ -63,7 +63,7 @@ resource "aws_security_group" "public" {
 resource "aws_instance" "private" {
   ami                    = "ami-0912f71e06545ad88"
   instance_type          = "t2.micro"
-  key_name               = "dropmailtokishan"
+  key_name               = "main"
   vpc_security_group_ids = [aws_security_group.private.id]
   subnet_id              = aws_subnet.private[0].id
 
