@@ -1,5 +1,5 @@
-data "aws_ami" "amazonlinux" {
-  owners      = ["137112412989"]
+data "aws_ami" "ubuntu" {
+  owners      = ["099720109477"]
   most_recent = true
 
   filter {
@@ -9,23 +9,18 @@ data "aws_ami" "amazonlinux" {
 
   filter {
     name   = "name"
-    values = ["amzn-ami-hvm-2018.03.0.20180811-x86*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20220609*"]
   }
 }
 
 resource "aws_instance" "public" {
-  ami                         = data.aws_ami.amazonlinux.id
+  ami                         = data.aws_ami.ubuntu.id
   associate_public_ip_address = true
   instance_type               = "t2.micro"
   key_name                    = "main"
   vpc_security_group_ids      = [aws_security_group.public.id]
   subnet_id                   = aws_subnet.public[0].id
-  user_data = <<EOF
-  #!/bin/bash
-  sudo yum update -y
-  sudo yum install httpd -y
-  sudo service httpd start
-  EOF
+  user_data                   = file("userdata.sh")
 
   tags = {
     Name = "${var.env_code}-public"
@@ -98,6 +93,6 @@ resource "aws_security_group" "private" {
   }
 
   tags = {
-    Name = "${var.env_code}-public"
+    Name = "${var.env_code}-private"
   }
 }
