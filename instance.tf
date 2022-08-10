@@ -93,6 +93,6 @@ resource "aws_security_group" "private" {
   }
 
   tags = {
-    Name = "${var.env_code}-private"
+    Name = "${var.env_code}-public"
   }
 }
