@@ -20,12 +20,7 @@ resource "aws_instance" "public" {
   key_name                    = "main"
   vpc_security_group_ids      = [aws_security_group.public.id]
   subnet_id                   = aws_subnet.public[0].id
-  user_data = <<EOF
-  #!/bin/bash
-  sudo yum update -y
-  sudo yum install httpd -y
-  sudo service httpd start
-  EOF
+  user_data                   = file("userdata.sh")
 
   tags = {
     Name = "${var.env_code}-public"
@@ -42,7 +37,7 @@ resource "aws_security_group" "public" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["106.195.44.58/32"]
+    cidr_blocks = ["106.208.56.34/32"]
   }
 
   ingress {
@@ -50,7 +45,7 @@ resource "aws_security_group" "public" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["106.195.44.58/32"]
+    cidr_blocks = ["106.208.56.34/32"]
   }
 
   egress {
@@ -68,7 +63,7 @@ resource "aws_security_group" "public" {
 resource "aws_instance" "private" {
   ami                    = "ami-0912f71e06545ad88"
   instance_type          = "t2.micro"
-  key_name               = "dropmailtokishan"
+  key_name               = "main"
   vpc_security_group_ids = [aws_security_group.private.id]
   subnet_id              = aws_subnet.private[0].id
 
