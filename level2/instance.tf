@@ -17,7 +17,7 @@ resource "aws_instance" "public" {
   ami                         = data.aws_ami.amazonlinux.id
   associate_public_ip_address = true
   instance_type               = "t2.micro"
-  key_name                    = "main"
+  key_name                    = "dropmailtokishan"
   vpc_security_group_ids      = [aws_security_group.public.id]
   subnet_id                   = data.terraform_remote_state.level1.outputs.public_subnet_id[1]
   user_data                   = file("userdata.sh")
@@ -37,7 +37,7 @@ resource "aws_security_group" "public" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["106.208.56.34/32"]
+    cidr_blocks = ["223.182.193.64/32"]
   }
 
   ingress {
@@ -45,7 +45,7 @@ resource "aws_security_group" "public" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["106.208.56.34/32"]
+    cidr_blocks = ["223.182.193.64/32"]
   }
 
   egress {
@@ -63,9 +63,10 @@ resource "aws_security_group" "public" {
 resource "aws_instance" "private" {
   ami                    = "ami-0912f71e06545ad88"
   instance_type          = "t2.micro"
-  key_name               = "main"
+  key_name               = "dropmailtokishan"
   vpc_security_group_ids = [aws_security_group.private.id]
   subnet_id              = data.terraform_remote_state.level1.outputs.private_subnet_id[1]
+  user_data                   = file("userdata.sh")
 
   tags = {
     Name = "${var.env_code}-private"
