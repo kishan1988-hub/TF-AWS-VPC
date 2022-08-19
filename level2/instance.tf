@@ -17,7 +17,7 @@ resource "aws_instance" "public" {
   ami                         = data.aws_ami.amazonlinux.id
   associate_public_ip_address = true
   instance_type               = "t2.micro"
-  key_name                    = "dropmailtokishan"
+  key_name                    = "main"
   vpc_security_group_ids      = [aws_security_group.public.id]
   subnet_id                   = data.terraform_remote_state.level1.outputs.public_subnet_id[1]
   user_data                   = file("userdata.sh")
@@ -63,7 +63,7 @@ resource "aws_security_group" "public" {
 resource "aws_instance" "private" {
   ami                    = "ami-0912f71e06545ad88"
   instance_type          = "t2.micro"
-  key_name               = "dropmailtokishan"
+  key_name               = "main"
   vpc_security_group_ids = [aws_security_group.private.id]
   subnet_id              = data.terraform_remote_state.level1.outputs.private_subnet_id[1]
   user_data                   = file("userdata.sh")
