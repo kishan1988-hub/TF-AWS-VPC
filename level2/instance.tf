@@ -66,7 +66,7 @@ resource "aws_instance" "private" {
   key_name               = "main"
   vpc_security_group_ids = [aws_security_group.private.id]
   subnet_id              = data.terraform_remote_state.level1.outputs.private_subnet_id[1]
-  user_data                   = file("userdata.sh")
+  user_data              = file("userdata.sh")
 
   tags = {
     Name = "${var.env_code}-private"
