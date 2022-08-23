@@ -37,7 +37,7 @@ resource "aws_security_group" "public" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["223.182.193.64/32"]
+    cidr_blocks = ["106.208.18.112/32"]
   }
 
   ingress {
@@ -45,7 +45,7 @@ resource "aws_security_group" "public" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["223.182.193.64/32"]
+    cidr_blocks = ["106.208.18.112/32"]
   }
 
   egress {
@@ -60,18 +60,7 @@ resource "aws_security_group" "public" {
   }
 }
 
-resource "aws_instance" "private" {
-  ami                    = "ami-0912f71e06545ad88"
-  instance_type          = "t2.micro"
-  key_name               = "main"
-  vpc_security_group_ids = [aws_security_group.private.id]
-  subnet_id              = data.terraform_remote_state.level1.outputs.private_subnet_id[1]
-  user_data              = file("userdata.sh")
 
-  tags = {
-    Name = "${var.env_code}-private"
-  }
-}
 
 resource "aws_security_group" "private" {
   name        = "${var.env_code}-private"
