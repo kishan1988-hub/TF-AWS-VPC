@@ -15,6 +15,10 @@ resource "aws_iam_role_policy_attachment" "main" {
   policy_arn = aws_iam_policy.main.arn
 }
 
+resource "aws_iam_role_policy_attachment" "ssm" {
+  role       = aws_iam_role.main.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
 
 resource "aws_iam_instance_profile" "main" {
   name = var.env_code
