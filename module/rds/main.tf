@@ -36,5 +36,6 @@ resource "aws_db_instance" "main" {
     vpc_security_group_ids = [aws_security_group.main.id]
     backup_retention_period = 35
     backup_window = "21:00-23:00"
+    skip_final_snapshot = true
 
 }
