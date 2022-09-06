@@ -5,3 +5,5 @@ variable "vpc_cidr_block" {
 variable "env_code" {
   type = string
 }
+
+variable "db_password" {}
