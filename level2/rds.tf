@@ -1,7 +1,3 @@
-locals {
-  rds_password = var.db_password
-}
-
 module "rds" {
   source = "../module/rds"
 
