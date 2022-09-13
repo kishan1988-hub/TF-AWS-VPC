@@ -1,8 +1,32 @@
+locals {
+  region = "ap-south-1"
+}
 module "vpc" {
-  source = "../module/vpc"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "3.14.4"
 
-  env_code       = var.env_code
-  vpc_cidr_block = var.vpc_cidr_block
-  private_cidr   = var.private_cidr
-  public_cidr    = var.public_cidr
+  name = var.env_code
+  cidr = var.vpc_cidr_block
+
+  public_subnets = var.public_cidr
+  private_subnets = var.private_cidr
+  azs = ["${local.region}a","${local.region}b"]
+
+  enable_ipv6 = false
+  enable_nat_gateway = true
+
+  public_subnet_tags = {
+    Name = "${var.env_code}-public"
+  }
+
+
+  tags = {
+    Owner       = "user"
+    Environment = "dev"
+  }
+
+  vpc_tags = {
+    Name = "vpc-name"
+  }
+
 }
