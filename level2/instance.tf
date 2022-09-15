@@ -1,4 +1,4 @@
-data "aws_ami" "amazonlinux" {
+data "aws_ami" "amazonlinux1" {
   owners      = ["137112412989"]
   most_recent = true
 
@@ -14,7 +14,7 @@ data "aws_ami" "amazonlinux" {
 }
 
 resource "aws_instance" "public" {
-  ami                         = data.aws_ami.amazonlinux.id
+  ami                         = data.aws_ami.amazonlinux1.id
   associate_public_ip_address = true
   instance_type               = "t2.micro"
   key_name                    = "dropmailtokishan"
