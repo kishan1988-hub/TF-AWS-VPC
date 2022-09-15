@@ -21,9 +21,9 @@ module "external_sg" {
 
   ingress_with_cidr_blocks = [
     {
-      from_port = 443
-      to_port = 443
-      protocol = "tcp"
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
       description = "HTTPS to ELB"
       cidr_blocks = "0.0.0.0/0"
     }
@@ -31,9 +31,9 @@ module "external_sg" {
 
   egress_with_cidr_blocks = [
     {
-      from_port = 0
-      to_port = 65535
-      protocol = "tcp"
+      from_port   = 0
+      to_port     = 65535
+      protocol    = "tcp"
       description = "https to ELB"
       cidr_blocks = "0.0.0.0/0"
     }
@@ -61,15 +61,15 @@ module "alb" {
       backend_port     = 80
 
       health_check = {
-          enabled             = true
-          path                = "/"
-          port                = "traffic-port"
-          matcher             = 200
-          healthy_threshold   = 5
-          unhealthy_threshold = 2
-          timeout             = 5
-          interval            = 30
-        }
+        enabled             = true
+        path                = "/"
+        port                = "traffic-port"
+        matcher             = 200
+        healthy_threshold   = 5
+        unhealthy_threshold = 2
+        timeout             = 5
+        interval            = 30
+      }
 
     }
   ]
@@ -80,7 +80,7 @@ module "alb" {
       protocol           = "HTTPS"
       certificate_arn    = module.acm.acm_certificate_arn
       target_group_index = 0
-      action_type = "forward"
+      action_type        = "forward"
     }
   ]
 
@@ -104,9 +104,9 @@ module "dns" {
 
   records = [
     {
-      name = "www"
-      type = "CNAME"
-      ttl = "3600"
+      name    = "www"
+      type    = "CNAME"
+      ttl     = "3600"
       records = [module.alb.lb_dns_name]
     }
   ]
